@@ -3,7 +3,7 @@
 A production-grade AI agent that generates Twitter-ready posts with AI-generated images and auto-publishes to your Twitter/X account — with a confirmation step before posting.
 
 ```
-User Input → FastAPI → Gemini (text) → HuggingFace (image) → Review UI → Twitter API
+User Input → FastAPI → Gemini (text) →  Pollinations AI (image) → Review UI → Twitter API
 ```
 
 ---
