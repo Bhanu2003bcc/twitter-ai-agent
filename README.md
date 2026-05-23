@@ -39,7 +39,7 @@ twitter-ai-agent/
 │   └── services/
 │       ├── gemini_service.py    # Google Gemini API (text)
 │       ├── huggingface_service.py # HuggingFace API (images)
-│       ├── twitter_service.py   # Twitter/X API (posting)
+│       ├── linkedIn_service.py   # Linked In API (posting)
 │       └── cache_service.py     # Redis / in-memory cache
 ├── frontend/
 │   └── index.html               # Web UI
@@ -82,11 +82,6 @@ Open `.env` and fill in your keys:
 GEMINI_API_KEY=your_key_here
 HUGGINGFACE_API_KEY=hf_your_token_here
 
-# Twitter (optional — needed only for actual posting)
-TWITTER_API_KEY=...
-TWITTER_API_SECRET=...
-TWITTER_ACCESS_TOKEN=...
-TWITTER_ACCESS_TOKEN_SECRET=...
 ```
 
 ### 3. Run the Server
@@ -156,7 +151,7 @@ You need a **Developer Account** with **Read + Write** permissions.
 4. Adjust tone, hashtags, emoji options
 5. Click ** Generate Content**
 6. Review the tweet preview and AI image
-7. Click ** Post to Twitter** — or **Cancel**
+7. Click ** Post to Linked In** — or **Cancel**
 
 ---
 
@@ -186,7 +181,7 @@ The agent exposes a clean REST API. Useful for integrations or automation.
 
 ### POST `/api/v1/generate`
 
-Generate Twitter post + image for a given input.
+Generate LinkedIn post + image for a given input.
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/generate \
@@ -243,8 +238,8 @@ curl -X POST http://localhost:8000/api/v1/confirm \
   "success": true,
   "session_id": "abc123-...",
   "status": "posted",
-  "tweet_id": "1234567890",
-  "tweet_url": "https://twitter.com/i/web/status/1234567890",
+  "post_id": "1234567890",
+  "post_url": "https://twitter.com/i/web/status/1234567890",
   "message": " Posted to Twitter!",
   "posted_at": "2024-01-15T12:34:56"
 }
@@ -310,10 +305,6 @@ All settings live in `.env`. Here's the full reference:
 | `GEMINI_MODEL` | No | `gemini-1.5-flash` | Gemini model to use |
 | `HUGGINGFACE_API_KEY` | ✅ Yes | — | HuggingFace access token |
 | `HUGGINGFACE_IMAGE_MODEL` | No | `stabilityai/stable-diffusion-xl-base-1.0` | Image generation model |
-| `TWITTER_API_KEY` | For posting | — | Twitter app API key |
-| `TWITTER_API_SECRET` | For posting | — | Twitter app API secret |
-| `TWITTER_ACCESS_TOKEN` | For posting | — | Your account access token |
-| `TWITTER_ACCESS_TOKEN_SECRET` | For posting | — | Your account access token secret |
 | `REDIS_ENABLED` | No | `false` | Enable Redis caching |
 | `REDIS_URL` | No | `redis://localhost:6379` | Redis connection URL |
 | `IMAGE_SAVE_DIR` | No | `generated_images` | Where to save images |
@@ -323,7 +314,7 @@ All settings live in `.env`. Here's the full reference:
 
 ---
 
-## 🔄 Agent Workflow Explained
+## Agent Workflow Explained
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -345,7 +336,7 @@ All settings live in `.env`. Here's the full reference:
 │       ↓                                                  │
 │  7. CONFIRM        User clicks OK / Cancel               │
 │       ↓                                                  │
-│  8. TWITTER        Uploads image → posts tweet           │
+│  8. Linked In        Uploads image → posts               │
 │       ↓                                                  │
 │  9. DONE           Returns tweet URL                     │
 │                                                          │
@@ -421,7 +412,7 @@ If you don't have Redis, set `REDIS_ENABLED=false` in `.env`. The agent uses in-
 | Backend API | FastAPI + Uvicorn |
 | Text Generation | Google Gemini 1.5 Flash |
 | Image Generation | HuggingFace Stable Diffusion |
-| Twitter Posting | Twitter API v2 + OAuth 1.0a |
+| Linked In Posting | Twitter API v2 + OAuth 1.0a |
 | Data Models | Pydantic v2 |
 | Async HTTP | httpx + asyncio |
 | Caching | Redis (or in-memory fallback) |
@@ -438,8 +429,8 @@ MIT License — free to use, modify, and distribute.
 
 ## 🙋 FAQ
 
-**Q: Can I use this without Twitter credentials?**
-Yes! The generate step works without Twitter keys. You'll see the generated post and image, but the "Post to Twitter" button will show an error until credentials are configured.
+**Q: Can I use this without Linked In credentials?**
+Yes! The generate step works without linked In keys. You'll see the generated post and image, but the "Post to Linked" button will show an error until credentials are configured.
 
 **Q: Is this free to use?**
 The Gemini and HuggingFace APIs have generous free tiers sufficient for personal use. Twitter's Basic plan ($100/month) is required for the API, but the free developer tier allows limited posting for testing.
